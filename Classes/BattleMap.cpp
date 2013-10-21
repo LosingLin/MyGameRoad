@@ -18,6 +18,7 @@ BattleMap::BattleMap()
 , m_tileWidth(0.0f)
 , m_tileHeight(0.0f)
 , m_content(NULL)
+, m_status(kBattleStatus_Undefine)
 {
 
 }
@@ -87,17 +88,32 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
         IGLOG("IG_INFO: hero is standing the place");
         auto hero = dynamic_cast<Hero*>(tile->getNode());
         IGLOG("IG_INFO: hero's hp is %d", hero->getHp());
+        
+        m_status = kBattleStatus_HeroSelect;
+        
         return;
     }
     
-    auto hero = HeroFactory::shareInstance()->createHero("Tank");
-    hero->setAnchorPoint(Point(0.5f, 0.0f));
-    hero->setPosition(Point(worldPos.x + m_tileWidth / 2, worldPos.y + 10));
-    hero->setZOrder(m_mapYSize-mapPos.y);
-    this->addChild(hero);
-    hero->walkDown();
-    tile->setContent(kTileContent_Hero);
-    tile->setNode(hero);
+    if (!m_status == kBattleStatus_HeroSelect)
+    {
+        auto hero = HeroFactory::shareInstance()->createHero("Tank");
+        hero->setAnchorPoint(Point(0.5f, 0.0f));
+        hero->setPosition(Point(worldPos.x + m_tileWidth / 2, worldPos.y + 10));
+        hero->setZOrder(m_mapYSize-mapPos.y);
+        this->addChild(hero);
+        hero->walkDown();
+        tile->setContent(kTileContent_Hero);
+        tile->setNode(hero);
+        
+        m_status = kBattleStatus_HeroReady;
+    }
+    else
+    {
+        //处理行走的
+        m_status = kBattleStatus_HeroWalking;
+        
+    }
+    
 }
 
 void BattleMap::BattleTouchBeginHappend(float x, float y)

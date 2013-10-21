@@ -311,6 +311,7 @@
 		FC04EADD181249270042F5C2 /* GlobalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalManager.h; path = ../Classes/GlobalManager.h; sourceTree = "<group>"; };
 		FC04EAE018124C3B0042F5C2 /* GlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalDefine.h; path = ../Classes/GlobalDefine.h; sourceTree = "<group>"; };
 		FC04EAE718124DEC0042F5C2 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Global.h; path = ../Classes/Global.h; sourceTree = "<group>"; };
+		FC070F5018157CB800829592 /* BattleMapStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BattleMapStatus.h; path = ../Classes/BattleMapStatus.h; sourceTree = "<group>"; };
 		FC2F4C32180ED09000650CD6 /* FrameAnimate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameAnimate.cpp; path = ../Classes/FrameAnimate.cpp; sourceTree = "<group>"; };
 		FC2F4C33180ED09000650CD6 /* FrameAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameAnimate.h; path = ../Classes/FrameAnimate.h; sourceTree = "<group>"; };
 		FC2F4C35180ED1E700650CD6 /* xpchar2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xpchar2.png; sourceTree = "<group>"; };
@@ -610,6 +611,7 @@
 				FCBEC2401812A150007D59B0 /* BattleMap.h */,
 				FCBEC2441812B8BB007D59B0 /* BattleMapTile.cpp */,
 				FCBEC2451812B8BB007D59B0 /* BattleMapTile.h */,
+				FC070F5018157CB800829592 /* BattleMapStatus.h */,
 			);
 			name = Map;
 			sourceTree = "<group>";

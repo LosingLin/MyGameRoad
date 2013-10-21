@@ -12,6 +12,7 @@
 #include "cocos2d.h"
 #include "BattleTouchListener.h"
 #include "BattleMapTile.h"
+#include "BattleMapStatus.h"
 
 USING_NS_CC;
 
@@ -45,6 +46,8 @@ private:
     float m_tileWidth;
     float m_tileHeight;
     Array* m_content;
+    
+    BattleMapStatus m_status;
 };
 
 #endif /* defined(__HelloCpp__BattleMap__) */
