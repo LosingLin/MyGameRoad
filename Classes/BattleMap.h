@@ -36,6 +36,8 @@ private:
     Point convertToWorldPosition(const Point& pos);
     
     BattleMapTile* getMapTile(int x, int y);
+    
+    bool IsPointInsideOfMap(const Point& pos);
 private:
     //map info
     int m_mapXSize;

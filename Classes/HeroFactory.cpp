@@ -7,6 +7,7 @@
 //
 
 #include "HeroFactory.h"
+#include "Global.h"
 #include "HeroTank.h"
 
 
@@ -58,7 +59,7 @@ void HeroFactory::registerHero(const char* key, Hero* hero)
     }
     else
     {
-        log("IG_INFO: key is existed!");
+        IGLOG("IG_INFO: key is existed!");
     }
 }
 void HeroFactory::removeHero(const char* key)
@@ -69,7 +70,7 @@ void HeroFactory::removeHero(const char* key)
     }
     else
     {
-        log("IG_INFO: key is exist!");
+        IGLOG("IG_INFO: key is exist!");
     }
 }
 

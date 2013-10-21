@@ -35,6 +35,8 @@ public:
     virtual void onTouchCancelled(Touch *touch, Event *event);
 private:
     BattleTouchListener* m_touchListener; //not own
+    float m_beginX;
+    float m_beginY;
 };
 
 #endif /* defined(__HelloCpp__BattleTouch__) */

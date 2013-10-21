@@ -35,10 +35,13 @@ public:
     int getY() { return m_y; }
     BattleMapTileContent getContent() { return m_content; }
     void setContent(BattleMapTileContent content) { m_content = content; }
+    Node* getNode() { return m_node; }
+    void setNode(Node* node) { m_node = node; }
 private:
     int m_x;
     int m_y;
     BattleMapTileContent m_content;
+    Node* m_node; //not own
 };
 
 #endif /* defined(__HelloCpp__BattleMapTile__) */

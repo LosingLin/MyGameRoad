@@ -9,6 +9,15 @@
 #ifndef HelloCpp_GlobalDefine_h
 #define HelloCpp_GlobalDefine_h
 
+#define IGDEBUG 1
+
+//定义调试BUG
+#if IGDEBUG == 1
+#define IGLOG(format, ...)      cocos2d::log(format, ##__VA_ARGS__)
+#else
+#define IGLOG(...)
+#endif
+
 
 #define RESOLUTIONSIZE_WIDTH 960.0f
 #define RESOLUTIONSIZE_HEIGHT 640.0f

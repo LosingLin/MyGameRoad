@@ -7,12 +7,15 @@
 //
 
 #include "BattleTouch.h"
+#include "Global.h"
 #include "BattleTouchListener.h"
 
 
 BattleTouch::BattleTouch()
 : Layer()
 , m_touchListener(NULL)
+, m_beginX(0.0f)
+, m_beginY(0.0f)
 {
 
 }
@@ -39,8 +42,6 @@ bool BattleTouch::init()
 void BattleTouch::onEnter()
 {
     Layer::onEnter();
-    log("onEnter");
-    
 }
 void BattleTouch::onExit()
 {
@@ -51,7 +52,10 @@ void BattleTouch::onExit()
 //touch
 bool BattleTouch::onTouchBegan(Touch *touch, Event *event)
 {
-    log("IG_INFO: touchBegan(%f, %f).", touch->getLocation().x, touch->getLocation().y);
+    IGLOG("IG_INFO: touchBegan(%f, %f).", touch->getLocation().x, touch->getLocation().y);
+    
+    m_beginX = touch->getLocation().x;
+    m_beginY = touch->getLocation().y;
     
     if (m_touchListener)
     {
@@ -66,11 +70,19 @@ void BattleTouch::onTouchMoved(Touch *touch, Event *event)
 }
 void BattleTouch::onTouchEnded(Touch *touch, Event *event)
 {
-    log("IG_INFO: onTouchEnded(%f, %f).", touch->getLocation().x, touch->getLocation().y);
+    IGLOG("IG_INFO: onTouchEnded(%f, %f).", touch->getLocation().x, touch->getLocation().y);
     
-    if (m_touchListener)
+    if (touch->getLocation().x >= m_beginX - 10 && touch->getLocation().x <= m_beginX + 10 &&
+        touch->getLocation().y >= m_beginY - 10 && touch->getLocation().y <= m_beginY + 10)
     {
-        m_touchListener->BattleTouchEndHappend(touch->getLocation().x, touch->getLocation().y);
+        if (m_touchListener)
+        {
+            m_touchListener->BattleTouchEndHappend(touch->getLocation().x, touch->getLocation().y);
+        }
+    }
+    else
+    {
+        IGLOG("IG_INFO: touch end is diff with begin!");
     }
 }
 void BattleTouch::onTouchCancelled(Touch *touch, Event *event)

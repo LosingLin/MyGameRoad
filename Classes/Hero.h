@@ -42,7 +42,7 @@ public:
     
     //setter&&getter
     void setHp(int hp) { m_hp = hp; }
-    int getHp(int hp) { return m_hp; }
+    int getHp() { return m_hp; }
     
     void setWalkStep(int step) { m_walkStep = step; }
     int getWalkStep() { return m_walkStep; }

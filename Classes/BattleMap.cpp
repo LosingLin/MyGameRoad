@@ -73,15 +73,23 @@ void BattleMap::initMapInfo()
 void BattleMap::BattleTouchEndHappend(float x, float y)
 {
     Point mapPos = convertToMapPosition(Point(x, y));
-    log("mapPos (%f, %f)", mapPos.x, mapPos.y);
+    IGLOG("mapPos (%f, %f)", mapPos.x, mapPos.y);
+    if (!IsPointInsideOfMap(mapPos))
+    {
+        IGLOG("IG_INFO: touch outof map!");
+        return;
+    }
     Point worldPos = convertToWorldPosition(mapPos);
-    log("worldPos (%f, %f)", worldPos.x, worldPos.y);
+
     BattleMapTile* tile = getMapTile(mapPos.x, mapPos.y);
     if (tile->getContent() == kTileContent_Hero)
     {
-        log("IG_INFO: hero is standing the place");
+        IGLOG("IG_INFO: hero is standing the place");
+        auto hero = dynamic_cast<Hero*>(tile->getNode());
+        IGLOG("IG_INFO: hero's hp is %d", hero->getHp());
         return;
     }
+    
     auto hero = HeroFactory::shareInstance()->createHero("Tank");
     hero->setAnchorPoint(Point(0.5f, 0.0f));
     hero->setPosition(Point(worldPos.x + m_tileWidth / 2, worldPos.y + 10));
@@ -89,7 +97,9 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
     this->addChild(hero);
     hero->walkDown();
     tile->setContent(kTileContent_Hero);
+    tile->setNode(hero);
 }
+
 void BattleMap::BattleTouchBeginHappend(float x, float y)
 {
     
@@ -111,6 +121,14 @@ Point BattleMap::convertToWorldPosition(const Point& pos)
     float x = pos.x * m_tileWidth + xSpace;
     float y = pos.y * m_tileHeight;
     return Point(x, y);
+}
+bool BattleMap::IsPointInsideOfMap(const Point& pos)
+{
+    if (pos.x>=0 && pos.x<m_mapXSize && pos.y>=0 && pos.y<m_mapYSize)
+    {
+        return true;
+    }
+    return false;
 }
 
 BattleMapTile* BattleMap::getMapTile(int x, int y)
