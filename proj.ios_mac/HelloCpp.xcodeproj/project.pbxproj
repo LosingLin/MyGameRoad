@@ -72,6 +72,8 @@
 		FC04EADE181249270042F5C2 /* GlobalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC04EADC181249270042F5C2 /* GlobalManager.cpp */; };
 		FC2F4C34180ED09000650CD6 /* FrameAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC2F4C32180ED09000650CD6 /* FrameAnimate.cpp */; };
 		FC2F4C36180ED1E700650CD6 /* xpchar2.png in Resources */ = {isa = PBXBuildFile; fileRef = FC2F4C35180ED1E700650CD6 /* xpchar2.png */; };
+		FC3C358618182163008C3420 /* AstarDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC3C358418182163008C3420 /* AstarDelegate.cpp */; };
+		FC3C35891818219F008C3420 /* Astar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC3C35871818219F008C3420 /* Astar.cpp */; };
 		FC4DFB47180D854C00BEFD79 /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC4DFB45180D854C00BEFD79 /* BattleScene.cpp */; };
 		FC4DFB49180D88E400BEFD79 /* defaultLand.tmx in Resources */ = {isa = PBXBuildFile; fileRef = FC4DFB48180D88E400BEFD79 /* defaultLand.tmx */; };
 		FC4DFB4B180D8A8A00BEFD79 /* land.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FC4DFB4A180D8A8A00BEFD79 /* land.jpg */; };
@@ -315,6 +317,10 @@
 		FC2F4C32180ED09000650CD6 /* FrameAnimate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameAnimate.cpp; path = ../Classes/FrameAnimate.cpp; sourceTree = "<group>"; };
 		FC2F4C33180ED09000650CD6 /* FrameAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameAnimate.h; path = ../Classes/FrameAnimate.h; sourceTree = "<group>"; };
 		FC2F4C35180ED1E700650CD6 /* xpchar2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xpchar2.png; sourceTree = "<group>"; };
+		FC3C358418182163008C3420 /* AstarDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AstarDelegate.cpp; path = ../Classes/AstarDelegate.cpp; sourceTree = "<group>"; };
+		FC3C358518182163008C3420 /* AstarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AstarDelegate.h; path = ../Classes/AstarDelegate.h; sourceTree = "<group>"; };
+		FC3C35871818219F008C3420 /* Astar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Astar.cpp; path = ../Classes/Astar.cpp; sourceTree = "<group>"; };
+		FC3C35881818219F008C3420 /* Astar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Astar.h; path = ../Classes/Astar.h; sourceTree = "<group>"; };
 		FC4DFB45180D854C00BEFD79 /* BattleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BattleScene.cpp; path = ../Classes/BattleScene.cpp; sourceTree = "<group>"; };
 		FC4DFB46180D854C00BEFD79 /* BattleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BattleScene.h; path = ../Classes/BattleScene.h; sourceTree = "<group>"; };
 		FC4DFB48180D88E400BEFD79 /* defaultLand.tmx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = defaultLand.tmx; sourceTree = "<group>"; };
@@ -561,9 +567,21 @@
 			name = Animate;
 			sourceTree = "<group>";
 		};
+		FC3C357C18182144008C3420 /* Astar */ = {
+			isa = PBXGroup;
+			children = (
+				FC3C358418182163008C3420 /* AstarDelegate.cpp */,
+				FC3C358518182163008C3420 /* AstarDelegate.h */,
+				FC3C35871818219F008C3420 /* Astar.cpp */,
+				FC3C35881818219F008C3420 /* Astar.h */,
+			);
+			name = Astar;
+			sourceTree = "<group>";
+		};
 		FC4DFB44180D852400BEFD79 /* Battle */ = {
 			isa = PBXGroup;
 			children = (
+				FC3C357C18182144008C3420 /* Astar */,
 				FCBEC23A18129947007D59B0 /* Map */,
 				FCBEC2331812993D007D59B0 /* Touch */,
 				FC4DFB45180D854C00BEFD79 /* BattleScene.cpp */,
@@ -859,6 +877,7 @@
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				FC04EADE181249270042F5C2 /* GlobalManager.cpp in Sources */,
+				FC3C358618182163008C3420 /* AstarDelegate.cpp in Sources */,
 				FCBEC23E181299D0007D59B0 /* BattleTouch.cpp in Sources */,
 				FC4DFB47180D854C00BEFD79 /* BattleScene.cpp in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
@@ -866,6 +885,7 @@
 				FCBEC2461812B8BB007D59B0 /* BattleMapTile.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				1AFAF8B816D35DE700DB1158 /* HelloWorldScene.cpp in Sources */,
+				FC3C35891818219F008C3420 /* Astar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

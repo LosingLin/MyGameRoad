@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "BattleTouchListener.h"
+#include "Astar.h"
 #include "BattleMapTile.h"
 #include "BattleMapStatus.h"
 
@@ -18,6 +19,7 @@ USING_NS_CC;
 
 class BattleMap : public Layer
 , public BattleTouchListener
+, public AstarDelegate
 {
 public:
     BattleMap();
@@ -29,6 +31,9 @@ public:
     //# BattleTouchListener
     virtual void BattleTouchEndHappend(float x, float y);
     virtual void BattleTouchBeginHappend(float x, float y);
+    
+    //# Astar Delegate
+    virtual void AstarInitCloseList(Array* arr);
 
 private:
     void initMapInfo();

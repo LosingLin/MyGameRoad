@@ -78,6 +78,7 @@ Hero* HeroFactory::createHero(const char* key)
 {
     CCASSERT(m_dic->objectForKey(key), "IG_ERROR: key is not exist!");
     
+    //addchild may add the same hero, so need clone the other hero
     Hero* hero = dynamic_cast<Hero*>(m_dic->objectForKey(key))->clone();
     
     return hero;

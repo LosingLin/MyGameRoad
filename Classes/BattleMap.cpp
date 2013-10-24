@@ -121,6 +121,13 @@ void BattleMap::BattleTouchBeginHappend(float x, float y)
     
 }
 
+#pragma mark - Astar Delegate
+
+void BattleMap::AstarInitCloseList(Array* arr)
+{
+    
+}
+
 #pragma mark - util
 Point BattleMap::convertToMapPosition(const Point& pos)
 {
