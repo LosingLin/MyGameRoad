@@ -16,12 +16,14 @@ Hero::Hero()
 : Node()
 , m_race(kAnimalRace_Undefined)
 , m_walkStep(0)
+, m_walkSpeed(0)
 , m_hp(0)
 , m_body(NULL)
 , m_frameAnimate(NULL)
 , c_fileName(NULL)
 , c_width(0.0f)
 , c_height(0.0f)
+, m_status(kHeroStatus_Undefine)
 {
 
 }
@@ -77,39 +79,106 @@ Hero* Hero::clone()
 //stay
 void Hero::stayLeft()
 {
-    m_body->stopAllActions();
-    m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 1));
+    if (m_status != kHeroStatus_StayLeft)
+    {
+        m_body->stopAllActions();
+        m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 1));
+        m_status = kHeroStatus_StayLeft;
+    }
 }
 void Hero::stayRight()
 {
-    m_body->stopAllActions();
-    m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 2));
+    if (m_status != kHeroStatus_StayRight)
+    {
+        m_body->stopAllActions();
+        m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 2));
+        m_status = kHeroStatus_StayRight;
+    }
 }
 void Hero::stayUp()
 {
-    m_body->stopAllActions();
-    m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 3));
+    if (m_status != kHeroStatus_StayUp)
+    {
+        m_body->stopAllActions();
+        m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 3));
+        m_status = kHeroStatus_StayUp;
+    }
 }
 void Hero::stayDown()
 {
-    m_body->stopAllActions();
-    m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 0));
+    if (m_status != kHeroStatus_StayDown)
+    {
+        m_body->stopAllActions();
+        m_body->setDisplayFrame(m_frameAnimate->getSpriteFrame(0, 0));
+        m_status = kHeroStatus_StayDown;
+    }
 }
 
 //walk
 void Hero::walkLeft()
 {
-    m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 1, 4, WALKANIMATEDELAY))));
+    if (m_status != kHeroStatus_WalkLeft)
+    {
+        m_body->stopAllActions();
+        m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 1, 4, WALKANIMATEDELAY))));
+        m_status = kHeroStatus_WalkLeft;
+    }
+    
 }
 void Hero::walkRight()
 {
-    m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 2, 4, WALKANIMATEDELAY))));
+    if (m_status != kHeroStatus_WalkRight)
+    {
+        m_body->stopAllActions();
+        m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 2, 4, WALKANIMATEDELAY))));
+        m_status = kHeroStatus_WalkRight;
+    }
 }
 void Hero::walkUp()
 {
-    m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 3, 4, WALKANIMATEDELAY))));
+    if (m_status != kHeroStatus_WalkUp)
+    {
+        m_body->stopAllActions();
+        m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 3, 4, WALKANIMATEDELAY))));
+        m_status = kHeroStatus_WalkUp;
+    }
 }
 void Hero::walkDown()
 {
-    m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 0, 4, WALKANIMATEDELAY))));
+    if (m_status != kHeroStatus_WalkDown)
+    {
+        m_body->stopAllActions();
+        m_body->runAction(RepeatForever::create(Animate::create(m_frameAnimate->getAnimation(0, 0, 4, WALKANIMATEDELAY))));
+        m_status = kHeroStatus_WalkDown;
+    }
+}
+
+void Hero::walkDone()
+{
+    switch (m_status)
+    {
+        case kHeroStatus_WalkDown:
+        {
+            stayDown();
+        }
+            break;
+        case kHeroStatus_WalkUp:
+        {
+            stayUp();
+        }
+            break;
+        case kHeroStatus_WalkLeft:
+        {
+            stayLeft();
+        }
+            break;
+        case kHeroStatus_WalkRight:
+        {
+            stayRight();
+        }
+            break;
+            
+        default:
+            break;
+    }
 }

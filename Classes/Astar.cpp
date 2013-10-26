@@ -7,6 +7,7 @@
 //
 
 #include "Astar.h"
+#include "Global.h"
 
 #pragma mark - AstarNode
 
@@ -25,6 +26,11 @@ AstarNode::AstarNode()
 AstarNode::~AstarNode()
 {
     
+}
+
+bool AstarNode::init()
+{
+    return true;
 }
 
 
@@ -58,8 +64,10 @@ bool Astar::init()
     return true;
 }
 
-void Astar::astar()
+Array* Astar::astar()
 {
+    Array* paths = Array::create();
+    
     //delegate init close array
     m_delegate->AstarInitCloseList(m_closeArr);
     
@@ -70,12 +78,20 @@ void Astar::astar()
     
     //set the start node in path node
     AstarNode* pathNode = startNode;
+    paths->addObject(pathNode);
     while (!isReachEndNode(pathNode))
     {
         m_closeArr->addObject(pathNode);
         
+        insertNextNodesToOpenArray(pathNode);
         
+        pathNode = findMinExpendInOpenArray();
+        paths->addObject(pathNode);
+        
+        m_openArr->removeAllObjects();
     }
+    
+    return paths;
 }
 
 #pragma mark - 
@@ -95,11 +111,92 @@ bool Astar::isInCloseArray(AstarNode* node)
     for (int i = 0; i < m_closeArr->count(); ++ i)
     {
         AstarNode* closeNode = dynamic_cast<AstarNode*>(m_closeArr->getObjectAtIndex(i));
+        //IGLOG("*****(%d, %d)VS(%d, %d)", closeNode->getX(), closeNode->getY(), node->getX(), node->getY());
         if (closeNode->getX() == node->getX() && closeNode->getY() == node->getY())
         {
             return true;
         }
     }
     return false;
+}
+
+AstarNode* Astar::createNode(int x, int y, AstarNode* fatherNode)
+{
+    auto node = AstarNode::create();
+    node->setX(x);
+    node->setY(y);
+    node->setG(fatherNode->getG() + m_delegate->AstarExpendGInNode(x, y));
+    node->setH(m_delegate->AstarExpendHInNode(x, y));
+    node->setFather(fatherNode);
+    node->setF(node->getG() + node->getH());
+    return node;
+}
+
+bool Astar::insertNextNodeToOpenArray(int x, int y, AstarNode* fatherNode)
+{
+    bool flag = false;
+    bool isOutMap = m_delegate->AstarIsOutOfMap(x, y);
+    if (!isOutMap)
+    {
+        AstarNode* node = createNode(x, y, fatherNode);
+        bool isClosed = isInCloseArray(node);
+        if (!isClosed)
+        {
+            flag = true;
+            m_openArr->addObject(node);
+        }
+        //IGLOG("(%d, %d)->%d: f:%d", x, y, flag, node->getF());
+    }
+    return flag;
+}
+
+bool Astar::insertNextNodesToOpenArray(AstarNode* fatherNode)
+{
+    bool flag = false;
+    int x = fatherNode->getX();
+    int y = fatherNode->getY();
+    //x+1
+    flag = insertNextNodeToOpenArray(x+1, y, fatherNode);
+    //x-1
+    flag = insertNextNodeToOpenArray(x-1, y, fatherNode);
+    //y+1
+    flag = insertNextNodeToOpenArray(x, y+1, fatherNode);
+    //y-1
+    flag = insertNextNodeToOpenArray(x, y-1, fatherNode);
+    
+    return flag;
+}
+
+AstarNode* Astar::findMinExpendInOpenArray()
+{
+    AstarNode* minENode = NULL;
+    auto endNode = m_delegate->AstarEndNode();
+    
+    for (int i=0; i < m_openArr->count(); ++ i)
+    {
+        AstarNode* node = dynamic_cast<AstarNode*>(m_openArr->getObjectAtIndex(i));
+        //node is not in closeArray
+        if (isInCloseArray(node))
+        {
+            continue;
+        }
+        if (minENode)
+        {
+            if (minENode->getF() > node->getF())
+            {
+                minENode = node;
+            }
+            //if the node is endnode
+            if (node->getX() == endNode->getX() && node->getY() == endNode->getY())
+            {
+                minENode = node;
+            }
+        }
+        else
+        {
+            minENode = node;
+        }
+    }
+    return minENode;
 }
 

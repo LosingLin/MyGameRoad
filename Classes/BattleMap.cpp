@@ -19,6 +19,8 @@ BattleMap::BattleMap()
 , m_tileHeight(0.0f)
 , m_content(NULL)
 , m_status(kBattleStatus_Undefine)
+, m_AstarStart(Point(0, 0))
+, m_AstarEnd(Point(0, 0))
 {
 
 }
@@ -101,17 +103,30 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
         hero->setPosition(Point(worldPos.x + m_tileWidth / 2, worldPos.y + 10));
         hero->setZOrder(m_mapYSize-mapPos.y);
         this->addChild(hero);
-        hero->walkDown();
+        hero->stayRight();
         tile->setContent(kTileContent_Hero);
         tile->setNode(hero);
         
         m_status = kBattleStatus_HeroReady;
+        m_AstarStart = mapPos;
+        m_currentHero = hero;
     }
     else
     {
         //处理行走的
         m_status = kBattleStatus_HeroWalking;
+        m_AstarEnd = mapPos;
         
+        Astar *astar = Astar::create();
+        astar->setDelegate(this);
+        Array* path = astar->astar();
+        for (int i=0; i<path->count(); ++ i)
+        {
+            AstarNode* node = dynamic_cast<AstarNode*>(path->getObjectAtIndex(i));
+            
+            IGLOG("(%d, %d)", node->getX(), node->getY());
+        }
+        HeroMove(path);
     }
     
 }
@@ -125,7 +140,97 @@ void BattleMap::BattleTouchBeginHappend(float x, float y)
 
 void BattleMap::AstarInitCloseList(Array* arr)
 {
+    for (int i=0; i < m_mapXSize; ++ i)
+    {
+        for (int j=0; j < m_mapYSize; ++ j)
+        {
+            BattleMapTile* tile = getMapTile(i, j);
+            BattleMapTileContent content = tile->getContent();
+            if (content == kTileContent_Stone || content == kTileContent_Tree
+                || content == kTileContent_Hero || content == kTileContent_Undefine)
+            {
+                AstarNode *node = AstarNode::create();
+                node->setX(i);
+                node->setY(j);
+                arr->addObject(node);
+            }
+        }
+    }
+}
+
+AstarNode* BattleMap::AstarStartNode()
+{
+    AstarNode* node = AstarNode::create();
+    node->setX(m_AstarStart.x);
+    node->setY(m_AstarStart.y);
+    return node;
+}
+AstarNode* BattleMap::AstarEndNode()
+{
+    AstarNode* node = AstarNode::create();
+    node->setX(m_AstarEnd.x);
+    node->setY(m_AstarEnd.y);
+    return node;
+}
+
+int BattleMap::AstarExpendGInNode(int x, int y)
+{
+    int expendG = 0;
+    BattleMapTile* tile = getMapTile(x, y);
+    switch (tile->getContent())
+    {
+        case kTileContent_Land:
+        {
+            expendG = 10;
+        }
+            break;
+        case kTileContent_Grass:
+        {
+            expendG = 15;
+        }
+            break;
+        case kTileContent_Tree:
+        {
+            expendG = 100;
+        }
+            break;
+        case kTileContent_Hero:
+        {
+            expendG = 200;
+        }
+            break;
+        case kTileContent_Stone:
+        {
+            expendG = 300;
+        }
+            break;
+        case kTileContent_Undefine:
+        {
+            expendG = 0;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    return expendG;
+}
+
+int BattleMap::AstarExpendHInNode(int x, int y)
+{
+    static int expend = 10;
     
+    int h = (abs(m_AstarEnd.x - x) + abs(m_AstarEnd.y - y)) * expend;
+    
+    return h;
+}
+
+bool BattleMap::AstarIsOutOfMap(int x, int y)
+{
+    if (x < 0 || y < 0 || x >= m_mapXSize || y >= m_mapYSize) {
+        return true;
+    }
+    return false;
 }
 
 #pragma mark - util
@@ -157,6 +262,7 @@ bool BattleMap::IsPointInsideOfMap(const Point& pos)
 BattleMapTile* BattleMap::getMapTile(int x, int y)
 {
     int index = x * m_mapYSize + y;
+    IGLOG("m_content->count: %d", m_content->count());
     BattleMapTile* tile = dynamic_cast<BattleMapTile*>(m_content->getObjectAtIndex(index));
     CCASSERT(tile, "tile can't be null");
     CCASSERT(tile->getX() == x && tile->getY() == y, "get error tile");
@@ -171,4 +277,52 @@ BattleMapTile* BattleMap::getMapTile(int x, int y)
 //    }
 //    
 //    return NULL;
+}
+
+void BattleMap::HeroMove(Array* path)
+{
+    Array* actions = Array::create();
+    for (int i = 0; i < path->count()-1; ++ i)
+    {
+        AstarNode* now = dynamic_cast<AstarNode*>(path->getObjectAtIndex(i));
+        AstarNode* next = dynamic_cast<AstarNode*>(path->getObjectAtIndex(i+1));
+        
+        Point pos = Point(next->getX() - now->getX(), next->getY() - now->getY());
+        CallFunc* call = NULL;
+        MoveBy* move = NULL;
+        if (pos.x == 0 && pos.y == -1) //down
+        {
+            call = CallFunc::create(CC_CALLBACK_0(Hero::walkDown, m_currentHero));
+            move = MoveBy::create(4.0f/m_currentHero->getWalkSpeed(), Point(0.0f, -m_tileWidth));
+        }
+        if (pos.x == 0 && pos.y == 1) //up
+        {
+            call = CallFunc::create(CC_CALLBACK_0(Hero::walkUp, m_currentHero));
+            move = MoveBy::create(4.0f/m_currentHero->getWalkSpeed(), Point(0.0f, m_tileWidth));
+        }
+        if (pos.x == -1 && pos.y == 0) //left
+        {
+            call = CallFunc::create(CC_CALLBACK_0(Hero::walkLeft, m_currentHero));
+            move = MoveBy::create(4.0f/m_currentHero->getWalkSpeed(), Point(-m_tileHeight, 0.0f));
+        }
+        if (pos.x == 1 && pos.y == 0) //right
+        {
+            call = CallFunc::create(CC_CALLBACK_0(Hero::walkRight, m_currentHero));
+            move = MoveBy::create(4.0f/m_currentHero->getWalkSpeed(), Point(m_tileHeight, 0.0f));
+        }
+        
+        CCASSERT(call && move, "heromove error");
+        
+        actions->addObject(call);
+        actions->addObject(move);
+    }
+    CallFunc* done = CallFunc::create(CC_CALLBACK_0(BattleMap::HeroMoveDonw, this));
+    actions->addObject(done);
+    
+    m_currentHero->runAction(Sequence::create(actions));
+}
+
+void BattleMap::HeroMoveDonw()
+{
+    m_currentHero->walkDone();
 }

@@ -26,6 +26,7 @@ bool HeroTank::init(const char* fileName, float width, float height)
     
     setHp(10);
     setWalkStep(2);
+    setWalkSpeed(10);
     setAnimalRace(kAnimalRace_Tank);
     
     return true;

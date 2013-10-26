@@ -22,7 +22,9 @@ public:
     virtual void AstarInitCloseList(Array* arr) = 0;
     virtual AstarNode* AstarStartNode() = 0;
     virtual AstarNode* AstarEndNode() = 0;
-    virtual int AstarExpendInNode(AstarNode* node) = 0;
+    virtual int AstarExpendGInNode(int x, int y) = 0;
+    virtual int AstarExpendHInNode(int x, int y) = 0;
+    virtual bool AstarIsOutOfMap(int x, int y) = 0;
 };
 
 #endif /* defined(__HelloCpp__AstarDelegate__) */

@@ -61,10 +61,14 @@ public:
     
     void setDelegate(AstarDelegate* delegate) { m_delegate = delegate; }
     
-    void astar();
+    Array* astar();
 private:
     bool isReachEndNode(AstarNode* node);
     bool isInCloseArray(AstarNode* node);
+    bool insertNextNodeToOpenArray(int x, int y, AstarNode* fatherNode);
+    bool insertNextNodesToOpenArray(AstarNode* fatherNode);
+    AstarNode* createNode(int x, int y, AstarNode* fatherNode);
+    AstarNode* findMinExpendInOpenArray();
 private:
     AstarDelegate* m_delegate;
     
