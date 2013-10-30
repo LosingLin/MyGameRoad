@@ -10,11 +10,13 @@
 #define __HelloCpp__BattleScene__
 
 #include "cocos2d.h"
+#include "BattleMapListener.h"
 
 USING_NS_CC;
 class BattleTouch;
 class BattleMap;
 class BattleScene : public Layer
+, public BattleMapListener
 {
 public:
     BattleScene();

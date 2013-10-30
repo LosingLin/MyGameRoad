@@ -9,7 +9,7 @@
 #include "BattleMap.h"
 #include "Global.h"
 #include "HeroFactory.h"
-
+#include "BattleMapListener.h"
 
 BattleMap::BattleMap()
 : Layer()
@@ -21,6 +21,8 @@ BattleMap::BattleMap()
 , m_status(kBattleStatus_Undefine)
 , m_AstarStart(Point(0, 0))
 , m_AstarEnd(Point(0, 0))
+, m_currentHero(NULL)
+, m_listener(NULL)
 {
 
 }
@@ -71,10 +73,54 @@ void BattleMap::initMapInfo()
     }
 }
 
+void BattleMap::setStatus(BattleMapStatus status)
+{
+    m_status = status;
+    const char* statusStr = NULL;
+    switch (m_status) {
+        case kBattleStatus_Undefine:
+        {
+            statusStr = "kBattleStatus_Undefine";
+        }
+            break;
+        case kBattleStatus_HeroReady:
+        {
+            statusStr = "kBattleStatus_HeroReady";
+        }
+            break;
+        case kBattleStatus_HeroSelect:
+        {
+            statusStr = "kBattleStatus_HeroSelect";
+        }
+            break;
+        case kBattleStatus_HeroWalkDone:
+        {
+            statusStr = "kBattleStatus_HeroWalkDone";
+        }
+            break;
+        case kBattleStatus_HeroWalking:
+        {
+            statusStr = "kBattleStatus_HeroWalking";
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    CCASSERT(statusStr, "map status error");
+    IGLOG("IG_INFO:%s", statusStr);
+}
+
 #pragma mark - BattleTouchListener
 
 void BattleMap::BattleTouchEndHappend(float x, float y)
 {
+    //
+    if (m_status == kBattleStatus_HeroWalking)
+    {
+        return;
+    }
     Point mapPos = convertToMapPosition(Point(x, y));
     IGLOG("mapPos (%f, %f)", mapPos.x, mapPos.y);
     if (!IsPointInsideOfMap(mapPos))
@@ -91,12 +137,13 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
         auto hero = dynamic_cast<Hero*>(tile->getNode());
         IGLOG("IG_INFO: hero's hp is %d", hero->getHp());
         
-        m_status = kBattleStatus_HeroSelect;
-        
+        setStatus(kBattleStatus_HeroSelect);
+        m_AstarStart = mapPos;
+        m_currentHero = hero;
         return;
     }
     
-    if (!m_status == kBattleStatus_HeroSelect)
+    if (m_status == kBattleStatus_Undefine)
     {
         auto hero = HeroFactory::shareInstance()->createHero("Tank");
         hero->setAnchorPoint(Point(0.5f, 0.0f));
@@ -106,15 +153,11 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
         hero->stayRight();
         tile->setContent(kTileContent_Hero);
         tile->setNode(hero);
-        
-        m_status = kBattleStatus_HeroReady;
-        m_AstarStart = mapPos;
-        m_currentHero = hero;
     }
-    else
+    
+    if (m_status == kBattleStatus_HeroSelect)
     {
         //处理行走的
-        m_status = kBattleStatus_HeroWalking;
         m_AstarEnd = mapPos;
         
         Astar *astar = Astar::create();
@@ -127,6 +170,8 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
             IGLOG("(%d, %d)", node->getX(), node->getY());
         }
         HeroMove(path);
+        
+        setStatus(kBattleStatus_HeroWalking);
     }
     
 }
@@ -278,14 +323,27 @@ BattleMapTile* BattleMap::getMapTile(int x, int y)
 //    
 //    return NULL;
 }
+void BattleMap::setMapTileContent(int x, int y, BattleMapTileContent content, Node* node)
+{
+    BattleMapTile* tile = getMapTile(x, y);
+    CCASSERT(tile, "tile can't null");
+    tile->setContent(content);
+    tile->setNode(node);
+}
 
 void BattleMap::HeroMove(Array* path)
 {
+    CCASSERT(path->count()>0, "path can't null");
+    
     Array* actions = Array::create();
     for (int i = 0; i < path->count()-1; ++ i)
     {
         AstarNode* now = dynamic_cast<AstarNode*>(path->getObjectAtIndex(i));
         AstarNode* next = dynamic_cast<AstarNode*>(path->getObjectAtIndex(i+1));
+        
+        //before
+        CCCallFuncO* before = CCCallFuncO::create(this, callfuncO_selector(BattleMap::HeroMoveBefore), now);
+        
         
         Point pos = Point(next->getX() - now->getX(), next->getY() - now->getY());
         CallFunc* call = NULL;
@@ -313,16 +371,42 @@ void BattleMap::HeroMove(Array* path)
         
         CCASSERT(call && move, "heromove error");
         
+        //after
+        CCCallFuncO* after = CCCallFuncO::create(this, callfuncO_selector(BattleMap::HeroMoveAfter), next);
+        
+        actions->addObject(before);
         actions->addObject(call);
         actions->addObject(move);
+        actions->addObject(after);
+        
     }
-    CallFunc* done = CallFunc::create(CC_CALLBACK_0(BattleMap::HeroMoveDonw, this));
+    CallFunc* done = CallFunc::create(CC_CALLBACK_0(BattleMap::HeroMoveDone, this));
     actions->addObject(done);
     
     m_currentHero->runAction(Sequence::create(actions));
 }
 
-void BattleMap::HeroMoveDonw()
+void BattleMap::HeroMoveDone()
 {
+    
     m_currentHero->walkDone();
+    setStatus(kBattleStatus_HeroWalkDone);
+    
+}
+void BattleMap::HeroMoveBefore(Object* start)
+{
+    //将起点的tile重置为land
+    AstarNode* node = dynamic_cast<AstarNode*>(start);
+    CCASSERT(node, "node can't null");
+    setMapTileContent(node->getX(), node->getY(), kTileContent_Land);
+}
+void BattleMap::HeroMoveAfter(Object* end)
+{
+    //将终点的tile设置为hero,并将当前的hero设置到tile的node上
+    AstarNode* node = dynamic_cast<AstarNode*>(end);
+    CCASSERT(node, "node can't null");
+    setMapTileContent(node->getX(), node->getY(), kTileContent_Hero, m_currentHero);
+    
+    //根据地图坐标修改当前英雄的 zOrder
+    m_currentHero->setZOrder(m_mapYSize - node->getY());
 }

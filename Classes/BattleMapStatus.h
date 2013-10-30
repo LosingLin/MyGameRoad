@@ -14,6 +14,7 @@ enum BattleMapStatus
     kBattleStatus_Undefine,
     kBattleStatus_HeroSelect,
     kBattleStatus_HeroWalking,
+    kBattleStatus_HeroWalkDone,
     kBattleStatus_HeroReady,
 };
 

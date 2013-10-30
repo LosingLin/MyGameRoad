@@ -34,6 +34,7 @@ bool BattleScene::init()
     Size winSize = Director::getInstance()->getWinSize();
     
     m_map = BattleMap::create();
+    m_map->setListener(this);
     this->addChild(m_map);
     
     m_touch = BattleTouch::create();

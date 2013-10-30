@@ -18,6 +18,7 @@
 USING_NS_CC;
 
 class Hero;
+class BattleMapListener;
 class BattleMap : public Layer
 , public BattleTouchListener
 , public AstarDelegate
@@ -40,11 +41,14 @@ public:
     virtual int AstarExpendGInNode(int x, int y);
     virtual int AstarExpendHInNode(int x, int y);
     virtual bool AstarIsOutOfMap(int x, int y);
-
+    
+    void setListener(BattleMapListener* listener) { m_listener=listener; }
+    
 private:
     void initMapInfo();
     
     BattleMapTile* getMapTile(int x, int y);
+    void setMapTileContent(int x, int y, BattleMapTileContent content, Node* node=NULL);
     
     Point convertToMapPosition(const Point& pos);
     Point convertToWorldPosition(const Point& pos);
@@ -52,7 +56,12 @@ private:
     bool IsPointInsideOfMap(const Point& pos);
     
     void HeroMove(Array* path);
-    void HeroMoveDonw();
+    void HeroMoveDone();
+    void HeroMoveBefore(Object* start);
+    void HeroMoveAfter(Object* end);
+    
+    
+    void setStatus(BattleMapStatus status);
 private:
     //map info
     int m_mapXSize;
@@ -68,6 +77,7 @@ private:
     Point m_AstarEnd;
     
     Hero* m_currentHero;
+    BattleMapListener *m_listener;
 };
 
 #endif /* defined(__HelloCpp__BattleMap__) */
