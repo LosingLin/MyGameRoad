@@ -78,18 +78,32 @@ Array* Astar::astar()
     
     //set the start node in path node
     AstarNode* pathNode = startNode;
-    paths->addObject(pathNode);
+//    paths->addObject(pathNode);
     while (!isReachEndNode(pathNode))
     {
         m_closeArr->addObject(pathNode);
         
-        insertNextNodesToOpenArray(pathNode);
+        bool hasNext = insertNextNodesToOpenArray(pathNode);
+        if (!hasNext)
+        {
+            IGLOG("IG_INFO: can't get there, stop");
+            
+            return paths;
+        }
+        removeNodeFromOpenArray(pathNode);
         
         pathNode = findMinExpendInOpenArray();
-        paths->addObject(pathNode);
-        
-        m_openArr->removeAllObjects();
     }
+    
+    paths->addObject(pathNode);
+    AstarNode* fatherNode = pathNode->getFather();
+    while (fatherNode != startNode)
+    {
+        paths->addObject(fatherNode);
+        fatherNode = fatherNode->getFather();
+    }
+    paths->addObject(startNode);
+    paths->reverseObjects();
     
     return paths;
 }
@@ -156,13 +170,21 @@ bool Astar::insertNextNodesToOpenArray(AstarNode* fatherNode)
     int x = fatherNode->getX();
     int y = fatherNode->getY();
     //x+1
-    flag = insertNextNodeToOpenArray(x+1, y, fatherNode);
+    if(insertNextNodeToOpenArray(x+1, y, fatherNode)){
+        flag = true;
+    };
     //x-1
-    flag = insertNextNodeToOpenArray(x-1, y, fatherNode);
+    if(insertNextNodeToOpenArray(x-1, y, fatherNode)){
+        flag = true;
+    };
     //y+1
-    flag = insertNextNodeToOpenArray(x, y+1, fatherNode);
+    if(insertNextNodeToOpenArray(x, y+1, fatherNode)){
+        flag = true;
+    };
     //y-1
-    flag = insertNextNodeToOpenArray(x, y-1, fatherNode);
+    if(insertNextNodeToOpenArray(x, y-1, fatherNode)){
+        flag = true;
+    };
     
     return flag;
 }
@@ -198,5 +220,17 @@ AstarNode* Astar::findMinExpendInOpenArray()
         }
     }
     return minENode;
+}
+
+void Astar::removeNodeFromOpenArray(AstarNode* node)
+{
+    for (int i=0; i < m_openArr->count(); ++ i)
+    {
+        AstarNode* openNode = dynamic_cast<AstarNode*>(m_openArr->getObjectAtIndex(i));
+        if (openNode->getX() == node->getX() && openNode->getY() == node->getY())
+        {
+            m_openArr->removeObject(openNode);
+        }
+    }
 }
 

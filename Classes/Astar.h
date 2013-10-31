@@ -67,8 +67,10 @@ private:
     bool isInCloseArray(AstarNode* node);
     bool insertNextNodeToOpenArray(int x, int y, AstarNode* fatherNode);
     bool insertNextNodesToOpenArray(AstarNode* fatherNode);
+    
     AstarNode* createNode(int x, int y, AstarNode* fatherNode);
     AstarNode* findMinExpendInOpenArray();
+    void removeNodeFromOpenArray(AstarNode* node);
 private:
     AstarDelegate* m_delegate;
     

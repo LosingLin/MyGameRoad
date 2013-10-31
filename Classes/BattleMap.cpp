@@ -169,9 +169,9 @@ void BattleMap::BattleTouchEndHappend(float x, float y)
             
             IGLOG("(%d, %d)", node->getX(), node->getY());
         }
+        setStatus(kBattleStatus_HeroWalking);
         HeroMove(path);
         
-        setStatus(kBattleStatus_HeroWalking);
     }
     
 }
@@ -307,7 +307,7 @@ bool BattleMap::IsPointInsideOfMap(const Point& pos)
 BattleMapTile* BattleMap::getMapTile(int x, int y)
 {
     int index = x * m_mapYSize + y;
-    IGLOG("m_content->count: %d", m_content->count());
+//    IGLOG("m_content->count: %d", m_content->count());
     BattleMapTile* tile = dynamic_cast<BattleMapTile*>(m_content->getObjectAtIndex(index));
     CCASSERT(tile, "tile can't be null");
     CCASSERT(tile->getX() == x && tile->getY() == y, "get error tile");
@@ -333,6 +333,13 @@ void BattleMap::setMapTileContent(int x, int y, BattleMapTileContent content, No
 
 void BattleMap::HeroMove(Array* path)
 {
+    if (path->count()<=0)
+    {
+        IGLOG("IG_INFO:heroMove failed!");
+        setStatus(kBattleStatus_HeroWalkDone);
+        return;
+    }
+    
     CCASSERT(path->count()>0, "path can't null");
     
     Array* actions = Array::create();
@@ -343,7 +350,6 @@ void BattleMap::HeroMove(Array* path)
         
         //before
         CCCallFuncO* before = CCCallFuncO::create(this, callfuncO_selector(BattleMap::HeroMoveBefore), now);
-        
         
         Point pos = Point(next->getX() - now->getX(), next->getY() - now->getY());
         CallFunc* call = NULL;
