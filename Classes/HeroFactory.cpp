@@ -70,7 +70,7 @@ void HeroFactory::removeHero(const char* key)
     }
     else
     {
-        IGLOG("IG_INFO: key is exist!");
+        IGLOG("IG_INFO: key is not exist!");
     }
 }
 

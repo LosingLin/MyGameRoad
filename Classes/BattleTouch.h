@@ -33,10 +33,14 @@ public:
     virtual void onTouchMoved(Touch *touch, Event *event);
     virtual void onTouchEnded(Touch *touch, Event *event);
     virtual void onTouchCancelled(Touch *touch, Event *event);
+    
+    //
+    void setMapTouchEnable(bool enable);
 private:
     BattleTouchListener* m_touchListener; //not own
     float m_beginX;
     float m_beginY;
+    bool m_enable;
 };
 
 #endif /* defined(__HelloCpp__BattleTouch__) */

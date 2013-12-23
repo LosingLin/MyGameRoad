@@ -72,6 +72,7 @@
 		FC04EADE181249270042F5C2 /* GlobalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC04EADC181249270042F5C2 /* GlobalManager.cpp */; };
 		FC2F4C34180ED09000650CD6 /* FrameAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC2F4C32180ED09000650CD6 /* FrameAnimate.cpp */; };
 		FC2F4C36180ED1E700650CD6 /* xpchar2.png in Resources */ = {isa = PBXBuildFile; fileRef = FC2F4C35180ED1E700650CD6 /* xpchar2.png */; };
+		FC31D20B18265D390060742F /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC31D20918265D390060742F /* Player.cpp */; };
 		FC3C358618182163008C3420 /* AstarDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC3C358418182163008C3420 /* AstarDelegate.cpp */; };
 		FC3C35891818219F008C3420 /* Astar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC3C35871818219F008C3420 /* Astar.cpp */; };
 		FC4DFB47180D854C00BEFD79 /* BattleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC4DFB45180D854C00BEFD79 /* BattleScene.cpp */; };
@@ -318,6 +319,8 @@
 		FC2F4C32180ED09000650CD6 /* FrameAnimate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameAnimate.cpp; path = ../Classes/FrameAnimate.cpp; sourceTree = "<group>"; };
 		FC2F4C33180ED09000650CD6 /* FrameAnimate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameAnimate.h; path = ../Classes/FrameAnimate.h; sourceTree = "<group>"; };
 		FC2F4C35180ED1E700650CD6 /* xpchar2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xpchar2.png; sourceTree = "<group>"; };
+		FC31D20918265D390060742F /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Player.cpp; path = ../Classes/Player.cpp; sourceTree = "<group>"; };
+		FC31D20A18265D390060742F /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = ../Classes/Player.h; sourceTree = "<group>"; };
 		FC3C358418182163008C3420 /* AstarDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AstarDelegate.cpp; path = ../Classes/AstarDelegate.cpp; sourceTree = "<group>"; };
 		FC3C358518182163008C3420 /* AstarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AstarDelegate.h; path = ../Classes/AstarDelegate.h; sourceTree = "<group>"; };
 		FC3C35871818219F008C3420 /* Astar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Astar.cpp; path = ../Classes/Astar.cpp; sourceTree = "<group>"; };
@@ -609,6 +612,8 @@
 				FC7EB8B21810337000E4AA30 /* Hero.h */,
 				FC7E0B1D1811948800B934CB /* HeroTank.cpp */,
 				FC7E0B1E1811948800B934CB /* HeroTank.h */,
+				FC31D20918265D390060742F /* Player.cpp */,
+				FC31D20A18265D390060742F /* Player.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -873,6 +878,7 @@
 			files = (
 				FC7EB8B31810337000E4AA30 /* Hero.cpp in Sources */,
 				FC2F4C34180ED09000650CD6 /* FrameAnimate.cpp in Sources */,
+				FC31D20B18265D390060742F /* Player.cpp in Sources */,
 				FC7E0B1F1811948800B934CB /* HeroTank.cpp in Sources */,
 				FC7E0B1B18118E9E00B934CB /* HeroFactory.cpp in Sources */,
 				FCBEC2411812A150007D59B0 /* BattleMap.cpp in Sources */,

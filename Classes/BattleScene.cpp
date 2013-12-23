@@ -16,6 +16,7 @@ BattleScene::BattleScene()
 : Layer()
 , m_touch(NULL)
 , m_map(NULL)
+, m_model(kBattleModel_Undefine)
 {
     
 }

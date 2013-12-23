@@ -16,6 +16,7 @@ BattleTouch::BattleTouch()
 , m_touchListener(NULL)
 , m_beginX(0.0f)
 , m_beginY(0.0f)
+, m_enable(false)
 {
 
 }
@@ -32,9 +33,8 @@ bool BattleTouch::init()
     }
 //    auto color = LayerColor::create(Color4B(100, 100, 100, 255));
 //    this->addChild(color);
-    this->setTouchEnabled(true);
-    this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
-    this->setSwallowsTouches(true);
+    
+    this->setMapTouchEnable(true);
     
     return true;
 }
@@ -46,6 +46,19 @@ void BattleTouch::onEnter()
 void BattleTouch::onExit()
 {
     Layer::onExit();
+}
+
+void BattleTouch::setMapTouchEnable(bool enable)
+{
+    if (m_enable != enable)
+    {
+        this->setTouchEnabled(m_enable);
+        if (m_enable)
+        {
+            this->setTouchMode(Touch::DispatchMode::ONE_BY_ONE);
+            this->setSwallowsTouches(m_enable);
+        }
+    }
 }
 
 
